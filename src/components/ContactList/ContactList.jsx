@@ -1,7 +1,14 @@
-import { useSelector } from "react-redux";
-import { ContactItem } from "components/ContactItem/ContactItem";
-import { getContacts } from "redux/contactsSlice";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { fetchContacts } from "redux/contact.thunk";
+import { getContacts, getLoadinStatus, getErrorStatus } from "redux/contactsSlice";
 import { getFilter } from "redux/filterSlice";
+
+import { ThreeDots } from "react-loader-spinner";
+import { ContactItem } from "components/ContactItem/ContactItem";
+
+
 
 const getFiltredContacts = (contacts, filter) => {
     if (!filter) {
@@ -13,9 +20,16 @@ const getFiltredContacts = (contacts, filter) => {
 };
 
 export const ContactList = () => {
+    const dispatch = useDispatch();
     const contacts = useSelector(getContacts);
+    const isLoading = useSelector(getLoadinStatus);
+    const error = useSelector(getErrorStatus);
     const filter = useSelector(getFilter);
 
+    useEffect(() => {
+    dispatch(fetchContacts());
+    }, [dispatch]);
+    
     if (!contacts) {
         return;
     };
@@ -23,13 +37,29 @@ export const ContactList = () => {
     const filtredContacts = getFiltredContacts(contacts, filter);
 
     return (
-        <ul>
-            {filtredContacts.map(contact => (
-                <ContactItem
-                    key={contact.id}
-                    contact={contact}
+        <>
+            {isLoading && <ThreeDots 
+                height="80" 
+                width="80" 
+                radius="9"
+                color="#4fa94d" 
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{"justifyContent":"center"}}
+                wrapperClassName=""
+                visible={true}
                 />
-            ))}
-        </ul>
+            }
+            {!error && !isLoading && <ul>
+                    {filtredContacts.map(contact => (
+                        <ContactItem
+                            key={contact.id}
+                            contact={contact}
+                        />
+                    ))}
+                </ul>
+            }
+
+        </>
+
     );
 };

@@ -1,17 +1,22 @@
 import { useDispatch } from "react-redux";
-import { deleteContact } from "redux/contactsSlice";
+import { deleteContact } from "redux/contact.thunk";
 import { Item, Button } from "components/ContactItem/ContactItem.styled";
+import { toast } from "react-toastify";
 import PropTypes from "prop-types";
 
 export const ContactItem = ({ contact }) => {
-    const { id, name, number } = contact;
+    const { id, name, phone } = contact;
     const dispatch = useDispatch();
 
-    const handleDelete = () => dispatch(deleteContact(id));
+    const handleDelete = () => { 
+        dispatch(deleteContact(id));
+        const notifySuccess = (message) => toast.info(message);
+        notifySuccess(`Contact "${name}" has been deleted from the contact list.`);
+    };
 
     return (
         <Item>
-            {name} {number}
+            {name}: {phone}
             <Button
                 type="button"
                 onClick={handleDelete}>
@@ -25,6 +30,6 @@ ContactItem.propTypes = {
     contact: PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
-        number: PropTypes.string.isRequired,
+        phone: PropTypes.string.isRequired,
     })
 };
