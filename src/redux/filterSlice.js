@@ -5,10 +5,12 @@ const filterInitialState = "";
 const filterSlice = createSlice({
   name: "filter",
   initialState: filterInitialState,
-  reducers: {
-    setFilter(_, action) {
-        return action.payload;
-    },
+  reducers:
+    builder => {
+      builder
+        .addCase(setFilter, (state, action) => {
+            state.filter = action.payload;
+        },)
   },
 });
 

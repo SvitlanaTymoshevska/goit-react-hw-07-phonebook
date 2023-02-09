@@ -11,7 +11,7 @@ export const ContactItem = ({ contact }) => {
     const handleDelete = () => { 
         dispatch(deleteContact(id));
         const notifyInfo = (message) => toast.info(message);
-        notifyInfo(`Contact "${name}" has been deleted from the contact list.`);
+        notifyInfo(`Deleted contact "${name}"`);
     };
 
     return (

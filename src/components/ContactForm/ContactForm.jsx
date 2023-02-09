@@ -6,7 +6,7 @@ import { Form, Label, LabelName, Input, Button } from "components/ContactForm/Co
 
 const contactInList = (contacts, name, phone) => { 
     let nameFinded = null;
-    
+
     if (contacts) {
         nameFinded = contacts.find(contact => { 
             if (contact.name.toLowerCase() === name.toLowerCase() && contact.phone === phone) {
@@ -40,7 +40,7 @@ export const ContactForm = () => {
 
         dispatch(addContact({ name, phone }));
         const notifyInfo = (message) => toast.info(message);
-        notifyInfo(`Contact "${name}" has been added to the contact list.`);
+        notifyInfo(`Added contact "${name}"`);
         form.reset();
     };
 
