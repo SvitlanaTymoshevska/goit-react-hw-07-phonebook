@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchContacts, addContact, deleteContact } from "redux/contact.thunk";
+import { fetchContacts, addContact, deleteContact } from "redux/contactThunk";
 
-const contaktsInitialState = {items: [],
+export const contaktsInitialState = {items: [],
                               isLoading: false,
                               error: null};
 
@@ -41,7 +41,7 @@ const contactsSlice = createSlice({
         .addCase(deleteContact.fulfilled, (state, { payload }) => {
           state.isLoading = false;
           state.error = null;
-          const index = state.items.findIndex(contact => contact.id === payload);
+          const index = state.items.findIndex(contact => contact.id === payload.id);
           state.items.splice(index, 1);
         })
         .addCase(deleteContact.rejected, (state, { payload }) => {
@@ -52,6 +52,7 @@ const contactsSlice = createSlice({
 });
 
 export const contactsReducer = contactsSlice.reducer;
+
 export const getContacts = state => state.contacts.items;
 export const getLoadinStatus = state => state.contacts.isLoading;
 export const getErrorStatus = state => state.contacts.error;

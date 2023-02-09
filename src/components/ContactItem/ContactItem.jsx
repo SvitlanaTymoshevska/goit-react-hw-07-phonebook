@@ -1,8 +1,8 @@
-import { useDispatch } from "react-redux";
-import { deleteContact } from "redux/contact.thunk";
-import { Item, Button } from "components/ContactItem/ContactItem.styled";
-import { toast } from "react-toastify";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { deleteContact } from "redux/contactThunk";
+import { toast } from "react-toastify";
+import { Item, Button } from "components/ContactItem/ContactItem.styled";
 
 export const ContactItem = ({ contact }) => {
     const { id, name, phone } = contact;
@@ -10,8 +10,8 @@ export const ContactItem = ({ contact }) => {
 
     const handleDelete = () => { 
         dispatch(deleteContact(id));
-        const notifySuccess = (message) => toast.info(message);
-        notifySuccess(`Contact "${name}" has been deleted from the contact list.`);
+        const notifyInfo = (message) => toast.info(message);
+        notifyInfo(`Contact "${name}" has been deleted from the contact list.`);
     };
 
     return (

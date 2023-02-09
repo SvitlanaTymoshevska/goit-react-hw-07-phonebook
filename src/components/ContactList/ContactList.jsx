@@ -1,14 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import { fetchContacts } from "redux/contact.thunk";
+import { fetchContacts } from "redux/contactThunk";
 import { getContacts, getLoadinStatus, getErrorStatus } from "redux/contactsSlice";
 import { getFilter } from "redux/filterSlice";
-
 import { ThreeDots } from "react-loader-spinner";
 import { ContactItem } from "components/ContactItem/ContactItem";
-
-
+import { toast } from "react-toastify";
 
 const getFiltredContacts = (contacts, filter) => {
     if (!filter) {
@@ -27,18 +24,24 @@ export const ContactList = () => {
     const filter = useSelector(getFilter);
 
     useEffect(() => {
-    dispatch(fetchContacts());
+        dispatch(fetchContacts());
     }, [dispatch]);
     
     if (!contacts) {
         return;
     };
     
+    if (error) {
+        const notifyError = (message) => toast.error(message);
+        notifyError(error);
+        return;
+    };
+
     const filtredContacts = getFiltredContacts(contacts, filter);
 
     return (
         <>
-            {isLoading && <ThreeDots 
+            {isLoading && !error && <ThreeDots 
                 height="80" 
                 width="80" 
                 radius="9"
@@ -49,7 +52,7 @@ export const ContactList = () => {
                 visible={true}
                 />
             }
-            {!error && !isLoading && <ul>
+            {!isLoading && !error && <ul>
                     {filtredContacts.map(contact => (
                         <ContactItem
                             key={contact.id}

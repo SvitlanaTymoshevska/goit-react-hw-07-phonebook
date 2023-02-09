@@ -1,9 +1,28 @@
 import { useSelector, useDispatch } from "react-redux";
 import { getContacts } from "redux/contactsSlice";
-import { addContact } from "redux/contact.thunk";
+import { addContact } from "redux/contactThunk";
 import { toast } from "react-toastify";
 import { Form, Label, LabelName, Input, Button } from "components/ContactForm/ContactFotm.styled";
-// import { createGlobalStyle } from "styled-components";
+
+const contactInList = (contacts, name, phone) => { 
+    let nameFinded = null;
+    
+    if (contacts) {
+        nameFinded = contacts.find(contact => { 
+            if (contact.name.toLowerCase() === name.toLowerCase() && contact.phone === phone) {
+                return contact.name;
+            };
+            return undefined;
+        });
+    };
+
+    if (nameFinded) {
+        const notifyError = (message) => toast.error(message);
+        notifyError(`${nameFinded.name} is alredy in contacts.`);
+    }
+    
+    return nameFinded;
+}
 
 export const ContactForm = () => {
     const contacts = useSelector(getContacts);
@@ -15,28 +34,13 @@ export const ContactForm = () => {
         const name = form.elements.name.value; 
         const phone = form.elements.phone.value; 
 
-        let findedName = null;
-
-        if (!contacts) {
-            return;
-        } else { 
-            findedName = contacts.find(contact => { 
-                if (contact.name.toLowerCase() === name.toLowerCase() && contact.phone === phone) {
-                    return contact.name;
-                };
-                return undefined;
-            });
-        };
-        
-        if (findedName) {
-            const notifyError = (message) => toast.error(message);
-            notifyError(`${findedName.name} is alredy in contacts.`);
+        if (contactInList(contacts, name, phone)) { 
             return;
         }
 
         dispatch(addContact({ name, phone }));
-        const notifySuccess = (message) => toast.success(message);
-        notifySuccess(`Contact "${name}" has been added to the contact list.`);
+        const notifyInfo = (message) => toast.info(message);
+        notifyInfo(`Contact "${name}" has been added to the contact list.`);
         form.reset();
     };
 
