@@ -52,7 +52,3 @@ const contactsSlice = createSlice({
 });
 
 export const contactsReducer = contactsSlice.reducer;
-
-export const getContacts = state => state.contacts.items;
-export const getLoadinStatus = state => state.contacts.isLoading;
-export const getErrorStatus = state => state.contacts.error;

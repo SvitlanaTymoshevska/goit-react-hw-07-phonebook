@@ -1,43 +1,27 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchContacts } from "redux/contactThunk";
-import { getContacts, getLoadinStatus, getErrorStatus } from "redux/contactsSlice";
-import { getFilter } from "redux/filterSlice";
+import { selectLoadinStatus, selectErrorStatus, selectFiltredContacts } from "redux/selectors";
 import { ThreeDots } from "react-loader-spinner";
 import { ContactItem } from "components/ContactItem/ContactItem";
 import { toast } from "react-toastify";
 
-const getFiltredContacts = (contacts, filter) => {
-    if (!filter) {
-        return contacts;
-    }
-
-    const filterLowerCase = filter.toLowerCase();
-    return contacts.filter(contact => contact.name.toLowerCase().includes(filterLowerCase));
-};
-
 export const ContactList = () => {
     const dispatch = useDispatch();
-    const contacts = useSelector(getContacts);
-    const isLoading = useSelector(getLoadinStatus);
-    const error = useSelector(getErrorStatus);
-    const filter = useSelector(getFilter);
+    const contacts = useSelector(selectFiltredContacts);
+    const isLoading = useSelector(selectLoadinStatus);
+    const error = useSelector(selectErrorStatus);
 
     useEffect(() => {
         dispatch(fetchContacts());
     }, [dispatch]);
-    
-    if (!contacts) {
-        return;
-    };
+
     
     if (error) {
         const notifyError = (message) => toast.error(message);
         notifyError(error);
         return;
     };
-
-    const filtredContacts = getFiltredContacts(contacts, filter);
 
     return (
         <>
@@ -50,19 +34,19 @@ export const ContactList = () => {
                 wrapperStyle={{"justifyContent":"center"}}
                 wrapperClassName=""
                 visible={true}
-                />
-            }
-            {!isLoading && !error && <ul>
-                    {filtredContacts.map(contact => (
+                />}
+
+            {contacts.length && !isLoading && !error && 
+                (<ul>
+                    {contacts.map(contact => (
                         <ContactItem
                             key={contact.id}
                             contact={contact}
                         />
                     ))}
-                </ul>
-            }
+                </ul>)}
 
+            {!contacts.length && !isLoading && !error && <p>Contacts not found</p>}
         </>
-
     );
 };

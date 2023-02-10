@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { getContacts } from "redux/contactsSlice";
+import { selectContacts } from "redux/selectors";
 import { addContact } from "redux/contactThunk";
 import { toast } from "react-toastify";
 import { Form, Label, LabelName, Input, Button } from "components/ContactForm/ContactFotm.styled";
@@ -25,7 +25,7 @@ const contactInList = (contacts, name, phone) => {
 }
 
 export const ContactForm = () => {
-    const contacts = useSelector(getContacts);
+    const contacts = useSelector(selectContacts);
     const dispatch = useDispatch();
 
     const handleSubmit = event => {
